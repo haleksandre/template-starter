@@ -1,6 +1,7 @@
 name: "CI - Test Templates"
 on:
   pull_request:
+  push:
 
 jobs:
   detect-changes:
@@ -8,6 +9,12 @@ jobs:
     outputs:
       templates: ${{ steps.filter.outputs.changes }}
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -23,7 +30,7 @@ jobs:
       matrix:
         templates: ${{ fromJSON(needs.detect-changes.outputs.templates) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Smoke test for '${{ matrix.templates }}'
         id: smoke_test
