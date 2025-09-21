@@ -32,6 +32,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: Jimver/cuda-toolkit@v0.2.27
+        id: cuda-toolkit
+
+      - name: Set Up Environment Variables
+        run: |
+          echo "UID=$(id -u)" >> $GITHUB_ENV
+          echo "GPUS=0" >> $GITHUB_ENV
+    
+
       - name: Smoke test for '${{ matrix.templates }}'
         id: smoke_test
         uses: ./.github/actions/smoke-test
